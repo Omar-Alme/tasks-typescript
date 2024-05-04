@@ -9,7 +9,15 @@ type Task = {
     isCompleted: boolean;
 };
 
-const tasks:Task[] =  [];
+const tasks:Task[] =  loadTasks();
+
+tasks.forEach(renderTask);
+
+
+function loadTasks(): Task[]{
+    const storedTasks = localStorage.getItem('tasks')
+    return storedTasks? JSON.parse(storedTasks):[]
+}
 
 
 taskForm?.addEventListener('submit',(event)=>{
@@ -24,8 +32,9 @@ taskForm?.addEventListener('submit',(event)=>{
         addTask(task);
         // view tasks 
         renderTask(task);
-
         //update localstorate
+        updateStorage();
+
         formInput.value = '';
         return;
     }
@@ -41,4 +50,8 @@ function renderTask(task: Task): void{
     const taskElement = document.createElement('li')
     taskElement.textContent = task.description
     taskListElement?.appendChild(taskElement);
+}
+
+function updateStorage(): void{
+    localStorage.setItem('tasks', JSON.stringify(tasks))
 }
